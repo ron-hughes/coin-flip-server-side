@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {
+            color: blue;
+            text-align: center;
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+
+            width: 100px;
+            height: 100px;
+            margin: 100px;
+        }
+
+        #buttons {
+            display: flex;
+            flex-direction: row;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <h1> Coin flip game with server-side logic</h1>
+
+
+
+        <div id="score">
+
+        </div>
+
+        <div id="buttons">
+
+            <button id="flip" name="flipcoin">
+                FLIP COIN
+            </button>
+        </div>
+    </div>
+
+    <script>
+
+
+        const flipCoinButton = document.querySelector('#flip')
+        function flipCoin() {
+                            const choices = ['heads', 'tails']
+                            const randomSide = Math.floor(Math.random() * choices.length)
+                            return choices[randomSide]
+        }
+
+
+
+        flipCoinButton.addEventListener('click', _ => {
+            fetch('/flip', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    result: flipCoin()    
+                })
+            })
+                .then(res => {
+                    if (res.ok) return res.json()
+                })
+        })
+
+    </script>
+
+</body>
+
+</html>
