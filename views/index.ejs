@@ -7,75 +7,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+         * {
+            box-sizing: border-box;
+         }
         h1 {
-            color: blue;
+            color: red;
             text-align: center;
         }
 
-        div {
+        .container {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        button {
+        .scores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-            width: 100px;
-            height: 100px;
-            margin: 100px;
-        }
+  #resultDiv{
+    display: flex;
+    height: 200px;
+    width: 200px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    align-items: center;
+    justify-content: center;
+  }
 
-        #buttons {
-            display: flex;
-            flex-direction: row;
-
-        }
     </style>
 </head>
 
 <body>
 
-    <div>
+    <div class="container">
         <h1> Coin flip game with server-side logic</h1>
-
-
-
-        <div id="score">
-
+        <div class="wins-loss">
+  
         </div>
+       
+        <div class="scores">
+
+                <input type="text" placeholder="input your name" value="" id="nameInput" name="name" />
+            
+        </div>
+        <div id="resultDiv">
+ 
+        </div>
+        <span>Wins</span><span id="span1"></span><br />
+        <span>Losses</span><span id="span"></span><br />
 
         <div id="buttons">
-
-            <button id="flip" name="flipcoin">
-                FLIP COIN
+            <button id="flipHeads" name="flipcoin">
+                heads
+            </button>
+            <button id="flipTails" name="flipcoin">
+                tails
             </button>
         </div>
-    </div>
+      
 
     <script>
+        
+        const flipCoinButtonHeads = document.querySelector('#flipHeads')
+        const flipCoinButtonTails = document.querySelector('#flipTails')
+        const resultDiv = document.querySelector('#resultDiv')
+        const name =  document.querySelector('#nameInput')
+        let playerName = ''
 
+name.addEventListener('input', function (event) {
+    playerName += event.data
+    // console.log(playerName)
+})
 
-        const flipCoinButton = document.querySelector('#flip')
-        function flipCoin() {
-                            const choices = ['heads', 'tails']
-                            const randomSide = Math.floor(Math.random() * choices.length)
-                            return choices[randomSide]
-        }
-
-
-
-        flipCoinButton.addEventListener('click', _ => {
+        flipCoinButtonHeads.addEventListener('click', _ => {
+          
             fetch('/flip', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    result: flipCoin()    
+                    result: 'heads',
+                    playerName
+             
                 })
             })
                 .then(res => {
                     if (res.ok) return res.json()
+                    console.log(res.json)
                 })
-        })
+                .then(res => {
+                    if (res === 'You Win') {
+                        console.log(res)
+                        resultDiv.textContent = 'You Win'
+                    }
+                    else {
+                        console.log(res)
+                        resultDiv.textContent = 'You Lose'
+                    }
+                })
+            })
+
+
+            flipCoinButtonTails.addEventListener('click', _ => {
+                fetch('/flip', {
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        result: 'tails',
+                        playerName
+                    })
+                })
+                    .then(res => {
+                        if (res.ok) return res.json()
+                    })
+                    .then(res => {
+                    if (res === 'You Win') {
+                        console.log(res)
+                        resultDiv.textContent = 'You Win'
+                    }
+                    else {
+                        console.log(res)
+                        resultDiv.textContent = 'You Lose'
+                    }
+                    
+                
+                })
+            })
+
 
     </script>
 
