@@ -64,6 +64,14 @@ else {
     res.json('You Lose');
     return;
   }
+
+  db.collection('scores').find().toArray()
+   .then ( e => {
+
+   })
+   .catch( e => {
+
+   })
 });
 
 
